@@ -4,13 +4,15 @@ public class MainSIAKAD {
     static Mahasiswa[] listMhs = {
         new Mahasiswa("22001", "Ali Rahman", "Informatika"),
         new Mahasiswa("22002", "Budi Santoso", "Informatika"),
-        new Mahasiswa("22003", "Citra Dewi", "Sistem Informasi Bisnis")
+        new Mahasiswa("22003", "Citra Dewi", "Sistem Informasi Bisnis"),
+        new Mahasiswa("22004", "Dina Mei", "Sistem Informasi Bisnis"),
+        new Mahasiswa("22005", "Dea Marsel", "Desain Web")
     };
 
     static MataKuliah[] listMK = {
-        new MataKuliah("MK001", "Struktur Data", 3),
-        new MataKuliah("MK002", "Basis Data", 3),
-        new MataKuliah("MK003", "Desain Web", 3)
+        new MataKuliah("MK001", "Struktur Data", 3, "Alexander S.Pd"),
+        new MataKuliah("MK002", "Basis Data", 3, "Putra Abdullah S.Kom"),
+        new MataKuliah("MK003", "Desain Web", 3, "Fadhil Jaidi S.Kom")
     };
 
     static Penilaian[] listPenilaian = {
@@ -18,7 +20,9 @@ public class MainSIAKAD {
         new Penilaian(listMhs[0], listMK[1], 60, 70, 75), // Ali - Basis Data
         new Penilaian(listMhs[1], listMK[0], 70, 76, 80), // Budi - Struktur Data
         new Penilaian(listMhs[2], listMK[1], 85, 90, 95), // Citra - Basis Data
-        new Penilaian(listMhs[2], listMK[2], 70, 75, 80)  // Citra - Desain Web
+        new Penilaian(listMhs[2], listMK[2], 70, 75, 80),  // Citra - Desain Web
+        new Penilaian(listMhs[3], listMK[1], 90, 90, 95), // Dina - Basis Data
+        new Penilaian(listMhs[4], listMK[2], 90, 85, 80)  // Dea - Desain Web
     };
 
     public static void main(String[] args) {
@@ -54,7 +58,7 @@ public class MainSIAKAD {
                     cariMahasiswa(sc);
                     break;
                 case 0:
-                    System.out.println("keluar dari program. terimakasih (๑ᵔ⤙ᵔ๑)");
+                    System.out.println("keluar dari program. terimakasih");
                     break;
                 default:
                     System.out.println("Pilihan tidak valid!");
@@ -84,8 +88,47 @@ public class MainSIAKAD {
     }
 
     public static void urutkanMahasiswa() {
-        bubbleSort();
+        Scanner input = new Scanner(System.in);
+        System.out.println("Pilih metode pengurutan:");
+        System.out.println("1. Bubble Sort - Descending");
+        System.out.println("2. Selection Sort- Ascending");
+        System.out.print("Pilihan: ");
+        int metode = input.nextInt();
+
+        switch (metode) {
+            case 1:
+                bubbleSort();
+                break;
+            case 2:
+                selectionSort();
+                break;
+            default:
+                System.out.println("Metode tidak valid.");
+                return;
+        }
+
+        System.out.println("Mahasiswa setelah diurutkan berdasarkan Nilai Akhir:");
         tampilDataPenilaian();
+    }
+
+    public static void cariMahasiswa(Scanner input) {
+        System.out.print("Masukkan NIM mahasiswa yang dicari: ");
+        String nim = input.nextLine();
+
+        Mahasiswa found = null;
+        for (Mahasiswa mhs : listMhs) {
+            if (mhs.NIM.equals(nim)) {
+                found = mhs;
+                break;
+            }
+        }
+
+        if (found != null) {
+            System.out.println("Mahasiswa Ditemukan: ");
+            System.out.println("NIM: " + found.NIM + " | Nama: " + found.nama + " | Prodi: " + found.prodi);
+        } else {
+            System.out.println("Mahasiswa tidak ditemukan.");
+        }
     }
 
     public static void bubbleSort() {
@@ -100,22 +143,18 @@ public class MainSIAKAD {
         }
     }
 
-    public static void cariMahasiswa(Scanner sc) {
-        System.out.print("Masukkan NIM mahasiswa yang dicari: ");
-        String cariNIM = sc.nextLine();
-        boolean ditemukan = false;
-
-        for (Mahasiswa m : listMhs) {
-            if (m.NIM.equals(cariNIM)) {
-                System.out.println("Mahasiswa Ditemukan:");
-                m.tampilMahasiswa();
-                ditemukan = true;
-                break;
+    public static void selectionSort() {
+        for (int i = 0; i < listPenilaian.length - 1; i++) {
+            int idxMin = i;
+            for (int j = i + 1; j < listPenilaian.length; j++) {
+                if (listPenilaian[j].nilaiAkhir < listPenilaian[idxMin].nilaiAkhir) {
+                    idxMin = j;
+                }
             }
-        }
-
-        if (!ditemukan) {
-            System.out.println("Mahasiswa dengan NIM " + cariNIM + " tidak ditemukan.");
+            Penilaian tmp = listPenilaian[idxMin];
+            listPenilaian[idxMin] = listPenilaian[i];
+            listPenilaian[i] = tmp;
         }
     }
+    
 }
